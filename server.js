@@ -95,6 +95,14 @@ app.get('/api/transactions', (req, res) => {
     db.query('SELECT * FROM transactions ORDER BY transaction_date DESC', (err, results) => res.json(results));
 });
 
-app.listen(3000, () => {
-    console.log('মাদ্রাসা ম্যানেজমেন্ট সার্ভার রেডি: http://localhost:3000');
-});
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 4000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
