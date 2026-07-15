@@ -6,18 +6,20 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// MySQL ডাটাবেজ কানেকশন
+// MySQL ডেটাবেস কানেকশন (এটি আপাতত বন্ধ করে দিলাম)
+
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '', // এখানে হয়তো কোনো পাসওয়ার্ড লেখা আছে
-    database: 'qawmi_madrasa_db'
+  host: '...', 
+  user: 'root',
+  password: '',
+  database: 'qawmi_madrasa_db'
 });
 
 db.connect((err) => {
-    if (err) throw err;
-    console.log('ডাটাবেজ কানেক্ট হয়েছে সফলভাবে!');
+  if (err) throw err;
+  console.log('ডেটাবেস কানেক্ট হয়েছে সফলভাবে!');
 });
+
 
 // হোম পেজ - index.html ফাইল পাঠানো
 app.get('/', (req, res) => {
