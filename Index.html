@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কওমি মাদ্রাসা ম্যানেজমেন্ট সিস্টেম</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f7f6; color: #333; display: flex; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 260px; background: #1b4d3e; height: 100vh; position: fixed; padding: 20px; color: white; }
+        .sidebar h2 { text-align: center; margin-bottom: 30px; font-size: 20px; border-bottom: 2px solid #2b7a78; padding-bottom: 10px; }
+        .sidebar button { width: 100%; background: none; border: none; color: white; text-align: left; padding: 12px 15px; font-size: 16px; cursor: pointer; border-radius: 5px; margin-bottom: 10px; transition: 0.3s; }
+        .sidebar button:hover, .sidebar button.active { background: #2b7a78; font-weight: bold; }
+        
+        /* Main Content Container */
+        .main-content { margin-left: 260px; padding: 30px; width: calc(100% - 260px); min-height: 100vh; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header h1 { color: #1b4d3e; font-size: 24px; }
+        
+        /* Dashboard Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #2b7a78; text-align: center; }
+        .stat-card.expense { border-left-color: #e67e22; }
+        .stat-card.cash { border-left-color: #27ae60; }
+        .stat-card h3 { font-size: 14px; color: #777; margin-bottom: 5px; }
+        .stat-card p { font-size: 22px; font-weight: bold; color: #333; }
+
+        /* Form & Table Styles */
+        .page-section { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: none; }
+        .page-section.active { display: block; }
+        .page-section h2 { margin-bottom: 20px; color: #1b4d3e; font-size: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn-submit { background: #1b4d3e; color: white; border: none; padding: 12px 20px; font-size: 15px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-submit:hover { background: #2b7a78; }
+        
+        /* Search and Table Design */
+        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+        th { background-color: #f8faf9; color: #1b4d3e; font-weight: bold; }
+        tr:hover { background-color: #fdfdfd; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <h2>মাদ্রাসা ম্যানেজমেন্ট</h2>
+        <button class="active" onclick="showSection('students-page')">👥 ছাত্রদের তালিকা</button>
+        <button onclick="showSection('admission-page')">📝 নতুন ছাত্র ভর্তি</button>
+        <button onclick="showSection('staff-page')">👔 শিক্ষক ও স্টাফ</button>
+        <button onclick="showSection('staff-add-page')">➕ শিক্ষক নিবন্ধন</button>
+        <button onclick="showSection('transactions-page')">📊 দৈনিক হিসাব-নিকাশ</button>
+        <button onclick="showSection('transaction-add-page')">💰 আয়/ব্যয় এন্ট্রি</button>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-content">
+        <div class="header">
+            <h1>মাদ্রাসা ড্যাশবোর্ড</h1>
+            <div style="font-size: 14px; color: #666;">তারিখ: <span id="current-date"></span></div>
+        </div>
+
+        <!-- Dashboard Widgets -->
+        <div class="stats-grid">
+            <div class="stat-card"><h3>মোট ছাত্র</h3><p id="stat-students">০</p></div>
+            <div class="stat-card"><h3>মোট স্টাফ</h3><p id="stat-staff">০</p></div>
+            <div class="stat-card"><h3>মোট আয়</h3><p id="stat-income">০ ৳</p></div>
+            <div class="stat-card class=expense"><h3>মোট ব্যয়</h3><p id="stat-expense">০ ৳</p></div>
+            <div class="stat-card class=cash"><h3>বর্তমান ক্যাশ</h3><p id="stat-cash">০ ৳</p></div>
+        </div>
+
+        <!-- SECTION 1: Students List -->
+        <div id="students-page" class="page-section active">
+            <h2>ভর্তি হওয়া ছাত্রদের তালিকা</h2>
+            <input type="text" class="search-box" id="search-student" onkeyup="filterTable('search-student', 'table-students')" placeholder="আইডি বা নাম দিয়ে খুঁজুন...">
+            <table id="table-students">
+                <thead><tr><th>আইডি</th><th>নাম</th><th>অভিভাবক</th><th>মোবাইল</th><th>ঠিকানা</th></tr></thead>
+                <tbody id="data-students"></tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 2: Student Admission Form -->
+        <div id="admission-page" class="page-section">
+            <h2>নতুন ছাত্র ভর্তি ফরম</h2>
+            <form action="/admission" method="POST">
+                <div class="form-group"><label>ছাত্রের পূর্ণ নাম:</label><input type="text" name="full_name" required></div>
+                <div class="form-group"><label>অভিভাবকের নাম:</label><input type="text" name="guardian_name" required></div>
+                <div class="form-group"><label>মোবাইল নম্বর:</label><input type="text" name="phone_number" required></div>
+                <div class="form-group"><label>পূর্ণ ঠিকানা:</label><input type="text" name="address" required></div>
+                <button type="submit" class="btn-submit">ভর্তি নিশ্চিত করুন</button>
+            </form>
+        </div>
+
+        <!-- SECTION 3: Staff List -->
+        <div id="staff-page" class="page-section">
+            <h2>শিক্ষক ও স্টাফ তালিকা</h2>
+            <input type="text" class="search-box" id="search-staff" onkeyup="filterTable('search-staff', 'table-staff')" placeholder="আইডি বা নাম দিয়ে খুঁজুন...">
+            <table id="table-staff">
+                <thead><tr><th>স্টাফ আইডি</th><th>নাম</th><th>পদবী</th><th>মোবাইল</th><th>মাসিক বেতন</th></tr></thead>
+                <tbody id="data-staff"></tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 4: Add Staff Form -->
+        <div id="staff-add-page" class="page-section">
+            <h2>নতুন শিক্ষক/স্টাফ নিবন্ধন</h2>
+            <form action="/add-staff" method="POST">
+                <div class="form-group"><label>শিক্ষক/স্টাফের নাম:</label><input type="text" name="full_name" required></div>
+                <div class="form-group"><label>পদবী (যেমন: মুহতামিম, শিক্ষক):</label><input type="text" name="designation" required></div>
+                <div class="form-group"><label>মোবাইল নম্বর:</label><input type="text" name="phone_number" required></div>
+                <div class="form-group"><label>মাসিক বেতন (টাকা):</label><input type="number" name="salary" required></div>
+                <div class="form-group"><label>যোগদানের তারিখ:</label><input type="date" name="joining_date" required></div>
+                <button type="submit" class="btn-submit">নিবন্ধন নিশ্চিত করুন</button>
+            </form>
+        </div>
+
+        <!-- SECTION 5: Transactions List -->
+        <div id="transactions-page" class="page-section">
+            <h2>দৈনিক আয়-ব্যয় রিপোর্ট</h2>
+            <table id="table-transactions">
+                <thead><tr><th>তারিখ</th><th>খাত/বিবরণ</th><th>হিসাবের ধরন</th><th>ফান্ড</th><th>পরিমাণ</th></tr></thead>
+                <tbody id="data-transactions"></tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 6: Add Transaction Form -->
+        <div id="transaction-add-page" class="page-section">
+            <h2>নতুন আয়-ব্যয় এন্ট্রি</h2>
+            <form action="/add-transaction" method="POST">
+                <div class="form-group"><label>বিবরণ/খাত (যেমন: চাল ক্রয়, বোর্ডিংয়ের আয়):</label><input type="text" name="title" required></div>
+                <div class="form-group"><label>টাকার পরিমাণ:</label><input type="number" step="0.01" name="amount" required></div>
+                <div class="form-group"><label>হিসাবের ধরন:</label><select name="transaction_type" required><option value="income">আয় (Inflow)</option><option value="expense">ব্যয় (Outflow)</option></select></div>
+                <div class="form-group"><label>ফান্ডের ধরন:</label><select name="fund_type" required><option value="general">সাধারণ ফান্ড</option><option value="lillah">লিল্লাহ ফান্ড</option><option value="mosque">মসজিদ ফান্ড</option></select></div>
+                <div class="form-group"><label>তারিখ:</label><input type="date" name="transaction_date" required></div>
+                <button type="submit" class="btn-submit" style="background:#e67e22;">হিসাব নিশ্চিত করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // তারিখ সেট করা
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('bn-BD');
+
+        // সেকশন পরিবর্তন করা (ট্যাব ক্লিক)
+        function showSection(sectionId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ডাটাবেজ থেকে তথ্য এনে স্ট্যাটিস্টিকস ও টেবিল লোড করা
+        async function loadDashboardData() {
+            // ড্যাশবোর্ড হিসাব
+            const stats = await fetch('/api/dashboard').then(res => res.json());
+            document.getElementById('stat-students').innerText = stats.total_students;
+            document.getElementById('stat-staff').innerText = stats.total_staff;
+            document.getElementById('stat-income').innerText = stats.total_income + ' ৳';
+            document.getElementById('stat-expense').innerText = stats.total_expense + ' ৳';
+            document.getElementById('stat-cash').innerText = stats.current_cash + ' ৳';
+
+            // ছাত্রদের ডাটা
+            const students = await fetch('/api/students').then(res => res.json());
+            document.getElementById('data-students').innerHTML = students.map(s => `<tr><td>${s.student_id_no}</td><td>${s.full_name}</td><td>${s.guardian_name}</td><td>${s.phone_number}</td><td>${s.address}</td></tr>`).join('');
+
+            // শিক্ষকদের ডাটা
+            const staff = await fetch('/api/staff').then(res => res.json());
+            document.getElementById('data-staff').innerHTML = staff.map(t => `<tr><td>${t.staff_id_no}</td><td>${t.full_name}</td><td>${t.designation}</td><td>${t.phone_number}</td><td>${t.salary} ৳</td></tr>`).join('');
+
+            // লেনদেন ডাটা
+            const txs = await fetch('/api/transactions').then(res => res.json());
+            document.getElementById('data-transactions').innerHTML = txs.map(t => `<tr><td>${new Date(t.transaction_date).toLocaleDateString('bn-BD')}</td><td>${t.title}</td><td style="color:${t.transaction_type==='income'?'green':'orange'}">${t.transaction_type==='income'?'আয়':'ব্যয়'}</td><td>${t.fund_type}</td><td>${t.amount} ৳</td></tr>`).join('');
+        }
+
+        // সার্চ বক্সের ফিল্টার ফাংশন
+        function filterTable(inputId, tableId) {
+            let input = document.getElementById(inputId).value.toUpperCase();
+            let tr = document.getElementById(tableId).getElementsByTagName('tr');
+            for (let i = 1; i < tr.length; i++) {
+                let tdName = tr[i].getElementsByTagName('td')[1];
+                let tdId = tr[i].getElementsByTagName('td')[0];
+                if (tdName || tdId) {
+                    let text = (tdName.textContent || tdName.innerText) + (tdId.textContent || tdId.innerText);
+                    tr[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        window.onload = loadDashboardData;
+    </script>
+</body>
+</html>
