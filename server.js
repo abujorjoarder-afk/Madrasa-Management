@@ -5,6 +5,13 @@ const path = require('path');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// এক্সপ্রেসকে বলুন যে এই ফোল্ডারেই ফাইলগুলো আছে
+app.use(express.static(__dirname));
+
+// হোম পেজ - index.html ফাইল পাঠানো
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // MySQL ডেটাবেস কানেকশন (এটি আপাতত বন্ধ করে দিলাম)
 
