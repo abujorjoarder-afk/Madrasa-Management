@@ -8,42 +8,28 @@ app.use(express.json());
 
 // MySQL ডেটাবেস কানেকশন (এটি আপাতত বন্ধ করে দিলাম)
 
-const db = mysql.createConnection({
-  host: '...', 
-  user: 'root',
-  password: '',
-  database: 'qawmi_madrasa_db'
-});
+// /*
+// const db = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
+//   database: 'qawmi_madrasa_db'
+// });
 
-db.connect((err) => {
-  if (err) throw err;
-  console.log('ডেটাবেস কানেক্ট হয়েছে সফলভাবে!');
-});
-
-
-// হোম পেজ - index.html ফাইল পাঠানো
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// ১. ড্যাশবোর্ড ডেটা (স্ট্যাটিস্টিকস)
-app.get('/api/dashboard', (req, res) => {
-    const data = {};
-    db.query('SELECT COUNT(*) as count FROM students', (err, r1) => {
-        data.total_students = r1[0].count;
-        db.query('SELECT COUNT(*) as count FROM staff', (err, r2) => {
-            data.total_staff = r2[0].count;
-            db.query('SELECT SUM(amount) as total FROM transactions WHERE transaction_type="income"', (err, r3) => {
-                data.total_income = r3[0].total || 0;
-                db.query('SELECT SUM(amount) as total FROM transactions WHERE transaction_type="expense"', (err, r4) => {
-                    data.total_expense = r4[0].total || 0;
-                    data.current_cash = data.total_income - data.total_expense;
-                    res.json(data);
-                });
-            });
-        });
-    });
-});
+// app.get('/api/dashboard', (req, res) => {
+//    // ... সব কোড
+// });
+// */
+// // ১. ড্যাশবোর্ড ডেটা (স্ট্যাটিস্টিকস)
+//                 db.query('SELECT SUM(amount) as total FROM transactions WHERE transaction_type="expense"', (err, r4) => {
+//                     data.total_expense = r4[0].total || 0;
+//                     data.current_cash = data.total_income - data.total_expense;
+//                     res.json(data);
+//                 });
+//             });
+//         });
+//     });
+// });
 
 // ২. ছাত্র ভর্তি রুট
 app.post('/admission', (req, res) => {
