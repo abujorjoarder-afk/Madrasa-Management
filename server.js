@@ -1,18 +1,20 @@
 const express = require('express');
-const mysql = require('mysql2');
 const path = require('path');
-
 const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-// এক্সপ্রেসকে বলুন যে এই ফোল্ডারেই ফাইলগুলো আছে
+
+// এটি বর্তমান ফোল্ডারকে পাবলিক হিসেবে সেট করবে
 app.use(express.static(__dirname));
 
-// হোম পেজ - index.html ফাইল পাঠানো
+// রুট ইউআরএল-এ index.html ফাইলটি দেখাবে
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// রেন্ডারের জন্য পোর্ট বাইন্ডিং
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
 // MySQL ডেটাবেস কানেকশন (এটি আপাতত বন্ধ করে দিলাম)
 
 // /*
