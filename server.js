@@ -95,14 +95,9 @@ app.get('/api/transactions', (req, res) => {
     db.query('SELECT * FROM transactions ORDER BY transaction_date DESC', (err, results) => res.json(results));
 });
 
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 4000
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// আপনার বর্তমান কোডটি এমন হবে:
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Server is running on port ${port}`);
+});
