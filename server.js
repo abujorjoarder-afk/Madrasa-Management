@@ -31,3 +31,14 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+// admission.html পেজটি দেখানোর জন্য
+app.get('/admission', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admission.html'));
+});
+
+// ফর্ম থেকে ডাটা গ্রহণ করার জন্য (POST)
+app.post('/admission', (req, res) => {
+    // এখানে আপনি ডাটা প্রসেস করবেন বা ডাটাবেসে সেভ করবেন
+    console.log(req.body); // ডাটা কনসোলে দেখা যাবে
+    res.send("ভর্তি ফরম জমা হয়েছে!");
+});
