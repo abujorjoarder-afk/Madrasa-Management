@@ -7,17 +7,16 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// হোম পেজ - Index.html ফাইল পাঠানো
+// হোম পেজ
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Index.html'));
 });
 
-// লগ-ইন পেজ দেখানোর জন্য
+// লগ-ইন পেজ
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// লগ-ইন ফর্ম সাবমিট হলে চেক করার জন্য
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (username === "admin" && password === "1234") {
@@ -27,22 +26,36 @@ app.post('/login', (req, res) => {
     }
 });
 
-// ভর্তি ফরম পেজ দেখানোর জন্য
+// ভর্তি ফরম
 app.get('/admission', (req, res) => {
     res.sendFile(path.join(__dirname, 'admission.html'));
 });
 
-// ভর্তি ফরম ডাটা জমা নেওয়ার পোস্ট রুট
 app.post('/admission', (req, res) => {
     const formData = JSON.stringify(req.body) + ",\n";
-    
     fs.appendFile('admissions.txt', formData, (err) => {
         if (err) {
             console.error(err);
-            res.send("দুঃখিত, ফরম জমা নিতে সমস্যা হয়েছে।");
+            res.send("দুঃখিত, ভর্তি ফরম জমা নিতে সমস্যা হয়েছে।");
         } else {
-            console.log('নতুন ভর্তি তথ্য জমা হয়েছে!');
             res.send("আপনার ভর্তি ফরমটি সফলভাবে জমা হয়েছে!");
+        }
+    });
+});
+
+// স্টাফ ফরম
+app.get('/add-staff', (req, res) => {
+    res.sendFile(path.join(__dirname, 'add-staff.html'));
+});
+
+app.post('/add-staff', (req, res) => {
+    const staffData = JSON.stringify(req.body) + ",\n";
+    fs.appendFile('staffs.txt', staffData, (err) => {
+        if (err) {
+            console.error(err);
+            res.send("দুঃখিত, স্টাফ তথ্য জমা নিতে সমস্যা হয়েছে।");
+        } else {
+            res.send("স্টাফের তথ্য সফলভাবে জমা হয়েছে!");
         }
     });
 });
