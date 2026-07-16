@@ -60,6 +60,15 @@ app.post('/add-staff', (req, res) => {
     });
 });
 
+// জমা হওয়া ফাইল দেখার রুট
+app.get('/view-admissions', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admissions.txt'));
+});
+
+app.get('/view-staffs', (req, res) => {
+    res.sendFile(path.join(__dirname, 'staffs.txt'));
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
