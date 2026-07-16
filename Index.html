@@ -86,21 +86,33 @@
         </div>
 
         <!-- SECTION 2: Student Admission Form -->
-        <div id="admission-page" class="page-section">
-            <h2>নতুন ছাত্র ভর্তি ফরম</h2>
-            <form action="/admission" method="POST">
-                <div class="form-group"><label>ছাত্রের পূর্ণ নাম:</label><input type="text" name="full_name" required></div>
-                <div class="form-group"><label>অভিভাবকের নাম:</label><input type="text" name="guardian_name" required></div>
-                <div class="form-group"><label>মোবাইল নম্বর:</label><input type="text" name="phone_number" required></div>
-                <div class="form-group"><label>পূর্ণ ঠিকানা:</label><input type="text" name="address" required></div>
-                <button type="submit" class="btn-submit">ভর্তি নিশ্চিত করুন</button>
-                <form action="/submit-form" method="POST">
-    <!-- আপনার ইনপুট ফিল্ডগুলো -->
-</form>
-            </form>
-
+<div id="admission-page" class="page-section">
+    <h2>নতুন ছাত্র ভর্তি ফরম</h2>
+    <!-- এখানে action="/submit-form" নিশ্চিত করুন -->
+    <form action="/submit-form" method="POST">
+        <div class="form-group">
+            <label>ছাত্রের পুরো নাম:</label>
+            <input type="text" name="name" required>
         </div>
-
+        <div class="form-group">
+            <label>অভিভাবকের নাম:</label>
+            <input type="text" name="parentName">
+        </div>
+        <div class="form-group">
+            <label>মোবাইল নম্বর:</label>
+            <input type="text" name="phone">
+        </div>
+        <div class="form-group">
+            <label>টাকার পরিমাণ:</label>
+            <input type="number" name="amount">
+        </div>
+        <div class="form-group">
+            <label>বিবরণ:</label>
+            <input type="text" name="type" value="ভর্তি">
+        </div>
+        <button type="submit" class="btn-submit">ভর্তি নিশ্চিত করুন</button>
+    </form>
+</div>
         <!-- SECTION 3: Staff List -->
         <div id="staff-page" class="page-section">
             <h2>শিক্ষক ও স্টাফ তালিকা</h2>
